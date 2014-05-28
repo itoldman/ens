@@ -1,0 +1,12 @@
+{application, ens,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { ens_app, []}},
+  {env, []}
+ ]}.
