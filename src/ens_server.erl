@@ -80,7 +80,7 @@ code_change(_OldVsn, State, _Extra) ->
 %% Internal Function Definitions
 %% ------------------------------------------------------------------
 create_node_table() ->
-	create_table(tgs_nodes, ?NODE_INFO).
+	create_table(ens_nodes, ?NODE_INFO).
 	
 write_node_record() ->
 	{ok,  NodeType} = application:get_env(node_type),
@@ -91,11 +91,11 @@ write_node_record() ->
 create_pid(Type, Id) ->
 	case Type of
 		player ->
-			create(tgs_players, ?PLAYER(Id));
+			create(ens_players, ?PLAYER(Id));
 		map ->
-			create(tgs_maps, ?MAP(Id));
+			create(ens_maps, ?MAP(Id));
 		union ->
-			create(tgs_union, ?UNION(Id))
+			create(ens_union, ?UNION(Id))
 	end.
 
 create(Type, Id) ->
@@ -106,11 +106,11 @@ create(Type, Id) ->
 find_pid(Type, Id) ->
 	case Type of
 		player ->
-			find(tgs_players, ?PLAYER(Id));
+			find(ens_players, ?PLAYER(Id));
 		map ->
-			find(tgs_maps, ?MAP(Id));
+			find(ens_maps, ?MAP(Id));
 		union ->
-			find(tgs_union, ?UNION(Id))
+			find(ens_union, ?UNION(Id))
 	end.
 
 find(Table, Record) ->
@@ -127,23 +127,23 @@ create_process_table() ->
 	{ok,  NodeType} = application:get_env(node_type),
 	case NodeType of
 		player ->
-			create_table(tgs_players, ?PLAYER_INFO);
+			create_table(ens_players, ?PLAYER_INFO);
 		map ->
-			create_table(tgs_maps, ?MAP_INFO);
+			create_table(ens_maps, ?MAP_INFO);
 		union ->
-			create_table(tgs_union, ?UNION_INFO)
+			create_table(ens_union, ?UNION_INFO)
 	end.							
 
-create_table(Name, Info) ->
-	case mnesia:add_table_copy(Name, node(), ram_copies) of
+create_table(Table, Info) ->
+	case mnesia:add_table_copy(Table, node(), ram_copies) of
 		{aborted, {no_exists, _}} ->
-			mnesia:create_table(tgs_players, [{attributes, Info}, {type, bag}]);
+			mnesia:create_table(Table, [{attributes, Info}, {type, bag}]);
 		{_, _} ->
 			ok
 	end.
 
 get_node(NodeType) ->
-	Nodes = mnesia:read(tgs_nodes, NodeType),
+	Nodes = mnesia:read(ens_nodes, NodeType),
 	N = random:uniform(length(Nodes)),
 	lists:nth(N, Nodes).
 
