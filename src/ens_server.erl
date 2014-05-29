@@ -96,7 +96,7 @@ get(Type, Id) ->
 
 set(Type, Id, Pid) ->
 	Table = table_name(Type),
-	mnesia:dirty_write(Table, {Id, Pid}). 
+	mnesia:dirty_write({Table, Id, Pid}). 
 
 delete(Type, Id) ->
 	Table = table_name(Type),
