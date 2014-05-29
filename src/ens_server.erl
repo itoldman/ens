@@ -86,7 +86,7 @@ get(Type, Id) ->
 	Table = table_name(Type),
 	Record = {Table, Id, '$1'},
 	case mnesia:dirty_select(Table, [{Record, [], ['$1']}]) of
-		[Pid] ->
+		[Pid|_] ->
 			{ok, Pid};
 		[] ->
 			{error, not_found};
