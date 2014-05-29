@@ -23,6 +23,8 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
+	io:format("Child is here...~n"),
 	Child = ?CHILD(ens_server, worker),
+	
     {ok, { {one_for_one, 5, 10}, [Child]} }.
 
