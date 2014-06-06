@@ -65,7 +65,7 @@ create_node_table() ->
 create_process_table() ->
 	{ok,  NodeType} = application:get_env(node_type),
 	Table = table_name(NodeType),
-	Info = [id, pid],
+	Info = [id, node, pid],
 	create_table(Table, Info).		
 
 create_table(Table, Info) ->
@@ -84,7 +84,7 @@ write_node_record() ->
 
 get(Type, Id) ->
 	Table = table_name(Type),
-	Record = {Table, Id, '$1'},
+	Record = {Table, Id, '_', '$1'},
 	case mnesia:dirty_select(Table, [{Record, [], ['$1']}]) of
 		[Pid|_] ->
 			{ok, Pid};
@@ -94,9 +94,9 @@ get(Type, Id) ->
 			{error, Reason}
 	end.	
 
-set(Type, Id, Pid) ->
+set(Type, Id, Node, Pid) ->
 	Table = table_name(Type),
-	mnesia:dirty_write({Table, Id, Pid}). 
+	ok = mnesia:dirty_write({Table, Id, Node, Pid}). 
 
 delete(Type, Id) ->
 	Table = table_name(Type),
